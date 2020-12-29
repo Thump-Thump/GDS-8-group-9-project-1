@@ -7,9 +7,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player speed")] 
-    public float playerSpeed;
+    public float playerAccelerationSpeed;
+    public float playerSlowDownSpeed;
     public float maxPlayerDistanceLeftDirection;
     public float maxPlayerDistanceRightDirection;
+    public float normalizeSpeedFactor;
     private float _playerInitialPosition;
     [Space(10)]
     
@@ -70,11 +72,15 @@ public class PlayerController : MonoBehaviour
         if (ShouldPlayerAccelerate()) 
         { 
             Debug.Log("Accelerate");
-            transform.Translate(Vector3.right * playerSpeed * Time.deltaTime);
+            transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
         }  else if (ShouldPlayerSlowDown()) 
         {
             Debug.Log("SlowDown");
-            transform.Translate(Vector3.left * playerSpeed * Time.deltaTime);
+            transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        }
+        else
+        {
+            NormalizeSpeed();
         }
 
     }
@@ -141,10 +147,23 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
     }
 
+    private void NormalizeSpeed()
+    {
+        if (transform.position.x < _playerInitialPosition)
+        {
+            transform.Translate(Vector3.right * (playerAccelerationSpeed * normalizeSpeedFactor) * Time.deltaTime);
+
+        } else if (transform.position.x > _playerInitialPosition)
+        {
+            transform.Translate(Vector3.left * (playerSlowDownSpeed * normalizeSpeedFactor) * Time.deltaTime);
+
+        }
+    }
+
 
     private bool ShouldPlayerSlowDown()
     {
-        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceRightDirection);
+        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
     }
 
     private bool ShouldPlayerJump()
