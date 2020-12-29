@@ -14,7 +14,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Important
   - 
   - 
   - 
@@ -39,6 +39,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Important
+    uniqueID: 621901493
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
