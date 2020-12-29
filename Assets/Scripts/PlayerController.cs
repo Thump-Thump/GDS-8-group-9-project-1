@@ -8,12 +8,18 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed;
     public float minSpeed;
 
+    public float baseSpeed;
+    public float speedInterval;
+    public float accelerationQuantity;
+    public float playerSpeed;
+
     private Rigidbody playerRigidBody;
     
     
     void Start()
     {
         LoadComponents();
+        playerSpeed = baseSpeed;
     }
 
     void Update()
@@ -39,44 +45,27 @@ public class PlayerController : MonoBehaviour
 
         if (ShouldPlayerAccelerate(forwardIpnut, currentPlayerSpeed)) 
         {
-            playerRigidBody.AddForce(Vector3.right * force * forwardIpnut, ForceMode.Acceleration);
-        }  
-        else if (ShouldPlayerMaintainMaxSpeed(forwardIpnut, currentPlayerSpeed)) 
+            playerSpeed += speedInterval;
+        }  else if (ShouldPlayerSlowDown(forwardIpnut, currentPlayerSpeed)) 
         {
-            playerRigidBody.velocity = new Vector3(maxSpeed, 0, 0);
-
-        } 
-        else if (ShouldPlayerSlowDown(forwardIpnut, currentPlayerSpeed)) 
-        {
-            playerRigidBody.AddForce(Vector3.right * force * forwardIpnut, ForceMode.Acceleration);
-        } 
-        else if (ShouldPlayerMaintainMinSpeed(forwardIpnut, currentPlayerSpeed)) 
-        {
-            playerRigidBody.velocity = new Vector3(minSpeed, 0, 0);
-        } 
-        else 
-        {
-            playerRigidBody.velocity = new Vector3(minSpeed, 0, 0);
+            playerSpeed -= speedInterval;
         }
+        Debug.Log("Speed " + playerSpeed );
+
+        playerRigidBody.velocity = new Vector3(playerSpeed, 0, 0);
+
     }
 
     private bool ShouldPlayerAccelerate(float forwardIpnut, float currentPlayerSpeed)
     {
-        return (forwardIpnut == 1 && currentPlayerSpeed < maxSpeed);
+        return (forwardIpnut == 1 && playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
     }
 
-    private bool ShouldPlayerMaintainMaxSpeed(float forwardIpnut, float currentPlayerSpeed)
-    {
-        return (forwardIpnut == 1 && currentPlayerSpeed >= maxSpeed);
-    }
 
     private bool ShouldPlayerSlowDown(float forwardIpnut, float currentPlayerSpeed)
     {
-        return (forwardIpnut == -1 && currentPlayerSpeed > minSpeed);
+        return (forwardIpnut == -1 && playerSpeed > baseSpeed);
     }
 
-        private bool ShouldPlayerMaintainMinSpeed(float forwardIpnut, float currentPlayerSpeed)
-    {
-        return (forwardIpnut == -1 && currentPlayerSpeed <= minSpeed);
-    }
+
 }
