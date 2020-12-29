@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Player speed")]
-    public float baseSpeed;
-    public float speedInterval;
-    public float accelerationQuantity;
-    private float _playerSpeed;
+    [Header("Player speed")] 
+    public float playerSpeed;
+    public float maxPlayerDistanceLeftDirection;
+    public float maxPlayerDistanceRightDirection;
+    private float _playerInitialPosition;
     [Space(10)]
     
     [Header("Jump")]
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         LoadComponents();
-        _playerSpeed = baseSpeed;
+        SetInitialVariables();
     }
 
     void Update()
@@ -50,6 +50,11 @@ public class PlayerController : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody>();
     }
 
+    private void SetInitialVariables()
+    {
+        _playerInitialPosition = transform.position.x;
+    }
+
     private void HandleJump()
     {
         if (ShouldPlayerJump())
@@ -61,22 +66,20 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
+        Debug.Log(transform.position);
         if (ShouldPlayerAccelerate()) 
-        {
-            _playerSpeed += speedInterval;
+        { 
+            Debug.Log("Accelerate");
+            transform.Translate(Vector3.right * playerSpeed * Time.deltaTime);
         }  else if (ShouldPlayerSlowDown()) 
         {
-            _playerSpeed -= speedInterval;
+            Debug.Log("SlowDown");
+            transform.Translate(Vector3.left * playerSpeed * Time.deltaTime);
         }
 
-        SetPlayerSpeed();
     }
 
-    private void SetPlayerSpeed()
-    {
-        playerRigidBody.velocity = new Vector3(_playerSpeed, 0, 0);
 
-    }
 
     private void HanldeShooting()
     {
@@ -135,13 +138,13 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldPlayerAccelerate()
     {
-        return ( Input.GetKeyDown(KeyCode.RightArrow) && _playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
+        return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
     }
 
 
     private bool ShouldPlayerSlowDown()
     {
-        return (Input.GetKeyDown(KeyCode.LeftArrow) && _playerSpeed > baseSpeed);
+        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceRightDirection);
     }
 
     private bool ShouldPlayerJump()
