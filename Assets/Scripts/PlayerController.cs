@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float force;
-    public float maxSpeed;
-    public float minSpeed;
-
     public float baseSpeed;
     public float speedInterval;
     public float accelerationQuantity;
     public float playerSpeed;
+
+    public float jumpHeight;
+    private bool jumpReady = true;
 
     private Rigidbody playerRigidBody;
     
@@ -30,11 +29,23 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         MovePlayer();
+        HandleJump();
     }
 
     private void LoadComponents() 
     {
         playerRigidBody = GetComponent<Rigidbody>();
+    }
+
+    private void HandleJump()
+    {
+        if (ShouldPlayerJump())
+        {
+            playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            jumpReady = false;
+            Debug.Log("JUMNP ");
+
+        }
     }
 
     private void MovePlayer()
@@ -47,7 +58,7 @@ public class PlayerController : MonoBehaviour
         {
             playerSpeed -= speedInterval;
         }
-        Debug.Log("Speed " + playerSpeed );
+        //Debug.Log("Speed " + playerSpeed );
 
         playerRigidBody.velocity = new Vector3(playerSpeed, 0, 0);
 
@@ -64,5 +75,21 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.LeftArrow) && playerSpeed > baseSpeed);
     }
 
+    private bool ShouldPlayerJump()
+    {
+        return (Input.GetKeyDown(KeyCode.UpArrow) && jumpReady);
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        //Check for a match with the specified name on any GameObject that collides with your GameObject
+        if (collision.gameObject.tag == "Platform")
+        {
+            Debug.Log("JUMP READY");
+            jumpReady = true;
+        }
+
+    }
 
 }
