@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     public float accelerationQuantity;
     public float playerSpeed;
 
+    public GameObject horizontalProjectile;
+    public GameObject verticalProjectile;
+
     public float jumpHeight;
     private bool jumpReady = true;
 
@@ -23,15 +26,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
-    }
-
-    void FixedUpdate()
-    {
-        MovePlayer();
+        HanldeShooting();
+        HandleMovement();
         HandleJump();
     }
-
+    
     private void LoadComponents() 
     {
         playerRigidBody = GetComponent<Rigidbody>();
@@ -48,7 +47,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MovePlayer()
+    private void HandleMovement()
     {
         //float currentPlayerSpeed = playerRigidBody.velocity.sqrMagnitude;
         if (ShouldPlayerAccelerate()) 
@@ -62,6 +61,15 @@ public class PlayerController : MonoBehaviour
 
         playerRigidBody.velocity = new Vector3(playerSpeed, 0, 0);
 
+    }
+
+    private void HanldeShooting()
+    {
+        if (ShouldPlayerShoot())
+        {
+            Instantiate(horizontalProjectile, transform.position, horizontalProjectile.transform.rotation);
+            Instantiate(verticalProjectile, transform.position, verticalProjectile.transform.rotation);
+        }
     }
 
     private bool ShouldPlayerAccelerate()
@@ -80,12 +88,19 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.UpArrow) && jumpReady);
     }
 
+    private bool ShouldPlayerShoot(){
+        return (Input.GetKeyDown(KeyCode.Space));
+    }
+
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision);
+
         //Check for a match with the specified name on any GameObject that collides with your GameObject
-        if (collision.gameObject.tag == "Platform")
+        if (CompareTag("Platform")) 
         {
+            
             Debug.Log("JUMP READY");
             jumpReady = true;
         }
