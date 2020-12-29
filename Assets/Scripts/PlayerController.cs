@@ -6,18 +6,28 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player speed")]
     public float baseSpeed;
     public float speedInterval;
     public float accelerationQuantity;
-    public float playerSpeed;
-
-    public GameObject horizontalProjectile;
-    public GameObject verticalProjectile;
-    public int shotIntervalsInSeconds;
-    private bool _shootReady = true;
+    private float _playerSpeed;
+    [Space(10)]
     
+    [Header("Jump")]
     public float jumpHeight;
     private bool _jumpReady = true;
+    [Space(10)]
+
+    [Header("Shooting")]
+    public GameObject horizontalProjectile;
+    public GameObject verticalProjectile;
+    public int horizontalProjectileInterval;
+    public int verticalProjectileInterval;
+    private bool _horizontalShootReady = true;
+    private bool _verticalShootReady = true;
+    [Space(10)]
+
+
 
     private Rigidbody playerRigidBody;
     
@@ -25,7 +35,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         LoadComponents();
-        playerSpeed = baseSpeed;
+        _playerSpeed = baseSpeed;
     }
 
     void Update()
@@ -53,10 +63,10 @@ public class PlayerController : MonoBehaviour
     {
         if (ShouldPlayerAccelerate()) 
         {
-            playerSpeed += speedInterval;
+            _playerSpeed += speedInterval;
         }  else if (ShouldPlayerSlowDown()) 
         {
-            playerSpeed -= speedInterval;
+            _playerSpeed -= speedInterval;
         }
 
         SetPlayerSpeed();
@@ -64,33 +74,53 @@ public class PlayerController : MonoBehaviour
 
     private void SetPlayerSpeed()
     {
-        playerRigidBody.velocity = new Vector3(playerSpeed, 0, 0);
+        playerRigidBody.velocity = new Vector3(_playerSpeed, 0, 0);
 
     }
 
     private void HanldeShooting()
     {
-        if (ShouldPlayerShoot())
+        if (ShouldPlayerShootHorizontally())
+        {
+            CreateHorizontalProjectile();
+            ReloadHorizontalShoot();
+        }
+        
+        if (ShouldPlayerShootVertically())
         {
             CreateVerticalProjectile();
-            CreateHorizontalProjectile();
-            ReloadShoot();
+            ReloadVerticalShoot();
         }
     }
 
-    private void ReloadShoot()
+    private void ReloadHorizontalShoot()
     {
-        DisableShoot();
-        Task.Delay(shotIntervalsInSeconds * 1000).ContinueWith(t=> EnableShoot());
+        DisableHorizontalShoot();
+        Task.Delay(horizontalProjectileInterval * 1000).ContinueWith(t=> EnableHorizontalShoot());
+    }
+    
+    private void ReloadVerticalShoot()
+    {
+        DisableVerticalShoot();
+        Task.Delay(verticalProjectileInterval * 1000).ContinueWith(t=> EnableVerticalShoot());
     }
 
-    private void DisableShoot()
+    private void DisableHorizontalShoot()
     {
-        _shootReady = false;
+        _horizontalShootReady = false;
     }
-    private void EnableShoot()
+    private void EnableHorizontalShoot()
     {
-        _shootReady = true;
+        _horizontalShootReady = true;
+    }
+    
+    private void DisableVerticalShoot()
+    {
+        _verticalShootReady = false;
+    }
+    private void EnableVerticalShoot()
+    {
+        _verticalShootReady = true;
     }
 
     private void CreateVerticalProjectile()
@@ -105,13 +135,13 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldPlayerAccelerate()
     {
-        return ( Input.GetKeyDown(KeyCode.RightArrow) && playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
+        return ( Input.GetKeyDown(KeyCode.RightArrow) && _playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
     }
 
 
     private bool ShouldPlayerSlowDown()
     {
-        return (Input.GetKeyDown(KeyCode.LeftArrow) && playerSpeed > baseSpeed);
+        return (Input.GetKeyDown(KeyCode.LeftArrow) && _playerSpeed > baseSpeed);
     }
 
     private bool ShouldPlayerJump()
@@ -119,10 +149,12 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.UpArrow) && _jumpReady);
     }
 
-    private bool ShouldPlayerShoot(){
-        return (Input.GetKeyDown(KeyCode.Space) && _shootReady);
+    private bool ShouldPlayerShootHorizontally(){
+        return (Input.GetKeyDown(KeyCode.Space) && _horizontalShootReady);
     }
-
+    private bool ShouldPlayerShootVertically(){
+        return (Input.GetKeyDown(KeyCode.Space) && _verticalShootReady);
+    }
 
     void OnCollisionEnter(Collision collision)
     {
