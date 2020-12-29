@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
     {
         if (ShouldPlayerJump())
         {
+            playerRigidBody.freezeRotation = true;
             playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
             _jumpReady = false;
         }
@@ -201,6 +202,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform")) 
         {
             _jumpReady = true;
+            playerRigidBody.freezeRotation = false;
             Debug.Log("jump ready");
 
         }
