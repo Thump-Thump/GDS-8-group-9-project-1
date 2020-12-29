@@ -84,13 +84,16 @@ public class PlayerController : MonoBehaviour
 
     private void Accelerate()
     {
-        transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        //transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
+
         GameManager.Instance.SetFastPlayerSpeed(); 
     }
 
     private void SlowDown()
     {
-        transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        //transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        playerRigidBody.AddForce(Vector3.left * playerAccelerationSpeed);
         GameManager.Instance.SetSlowPlayerSpeed();  
     }
 
