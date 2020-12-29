@@ -17,7 +17,6 @@ public class RotateWheel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(GameManager.Instance.GetPlayerSpeed());
         transform.Rotate(new Vector3(0, 0,   GetRotationSpeed() * Time.deltaTime));
     }
 

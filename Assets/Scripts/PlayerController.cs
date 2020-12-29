@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private Rigidbody playerRigidBody;
+    private Rigidbody2D playerRigidBody;
     
     
     void Start()
@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     
     private void LoadComponents() 
     {
-        playerRigidBody = GetComponent<Rigidbody>();
+        playerRigidBody = GetComponent<Rigidbody2D>();
     }
 
     private void SetInitialVariables()
@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     {
         if (ShouldPlayerJump())
         {
-            playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
             _jumpReady = false;
         }
     }
@@ -191,11 +191,15 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.Space) && _verticalShootReady);
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.tag);
+
         if (collision.gameObject.CompareTag("Platform")) 
         {
             _jumpReady = true;
+            Debug.Log("jump ready");
+
         }
 
     }
