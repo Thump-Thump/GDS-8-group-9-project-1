@@ -39,14 +39,11 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        float currentPlayerSpeed = playerRigidBody.velocity.sqrMagnitude;
-        float forwardIpnut = Input.GetAxis("Horizontal");
-
-
-        if (ShouldPlayerAccelerate(forwardIpnut, currentPlayerSpeed)) 
+        //float currentPlayerSpeed = playerRigidBody.velocity.sqrMagnitude;
+        if (ShouldPlayerAccelerate()) 
         {
             playerSpeed += speedInterval;
-        }  else if (ShouldPlayerSlowDown(forwardIpnut, currentPlayerSpeed)) 
+        }  else if (ShouldPlayerSlowDown()) 
         {
             playerSpeed -= speedInterval;
         }
@@ -56,15 +53,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private bool ShouldPlayerAccelerate(float forwardIpnut, float currentPlayerSpeed)
+    private bool ShouldPlayerAccelerate()
     {
-        return (forwardIpnut == 1 && playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
+        return ( Input.GetKeyDown(KeyCode.RightArrow) && playerSpeed < (baseSpeed + (speedInterval * accelerationQuantity)));
     }
 
 
-    private bool ShouldPlayerSlowDown(float forwardIpnut, float currentPlayerSpeed)
+    private bool ShouldPlayerSlowDown()
     {
-        return (forwardIpnut == -1 && playerSpeed > baseSpeed);
+        return (Input.GetKeyDown(KeyCode.LeftArrow) && playerSpeed > baseSpeed);
     }
 
 

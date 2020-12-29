@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 1091686556}
   - component: {fileID: 1091686555}
   - component: {fileID: 1091686558}
+  - component: {fileID: 1091686559}
   m_Layer: 0
   m_Name: Car_body
   m_TagString: Untagged
@@ -354,7 +355,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091686554}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.247, y: -1.66, z: -2.023}
+  m_LocalPosition: {x: -14.247, y: -1.756, z: -2.023}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -373,6 +374,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 9.249999, y: 2.4499998, z: 0.19999999}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1091686559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091686554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efdbb40f727bd44b08ff13e48d808c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 10
+  maxSpeed: 5
+  minSpeed: 2.5
+  baseSpeed: 3
+  speedInterval: 2
+  accelerationQuantity: 2
+  playerSpeed: 0
 --- !u!1 &1517198531
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,7 +667,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1835606791}
   m_LocalRotation: {x: -0, y: -0, z: -0.7092293, w: 0.70497787}
-  m_LocalPosition: {x: -12.44, y: -1.755, z: -1.9872491}
+  m_LocalPosition: {x: -12.848, y: -0.539, z: -1.9872491}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
