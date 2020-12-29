@@ -68,21 +68,30 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        Debug.Log(transform.position);
-        if (ShouldPlayerAccelerate()) 
-        { 
-            Debug.Log("Accelerate");
-            transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
-        }  else if (ShouldPlayerSlowDown()) 
+        if (ShouldPlayerAccelerate())
         {
-            Debug.Log("SlowDown");
-            transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+            Accelerate();
+        }  else if (ShouldPlayerSlowDown())
+        {
+            SlowDown();
         }
         else
         {
             NormalizeSpeed();
         }
 
+    }
+
+    private void Accelerate()
+    {
+        transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        GameManager.Instance.SetFastPlayerSpeed(); 
+    }
+
+    private void SlowDown()
+    {
+        transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        GameManager.Instance.SetSlowPlayerSpeed();  
     }
 
 
@@ -151,12 +160,16 @@ public class PlayerController : MonoBehaviour
     {
         if (transform.position.x < _playerInitialPosition)
         {
-            transform.Translate(Vector3.right * (playerAccelerationSpeed * normalizeSpeedFactor) * Time.deltaTime);
+            Accelerate();
 
-        } else if (transform.position.x > _playerInitialPosition)
+        } 
+        else if (transform.position.x > _playerInitialPosition)
         {
-            transform.Translate(Vector3.left * (playerSlowDownSpeed * normalizeSpeedFactor) * Time.deltaTime);
-
+            SlowDown();
+        }
+        else
+        {
+            GameManager.Instance.SetNormalPlayerSpeed();
         }
     }
 
