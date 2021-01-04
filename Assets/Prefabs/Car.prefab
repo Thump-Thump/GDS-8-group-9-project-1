@@ -421,11 +421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efdbb40f727bd44b08ff13e48d808c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAccelerationSpeed: 1.5
-  playerSlowDownSpeed: 0.5
-  maxPlayerDistanceLeftDirection: 0.8
+  playerAccelerationSpeed: 1.2
+  playerSlowDownSpeed: 0.75
+  maxPlayerDistanceLeftDirection: 1
   maxPlayerDistanceRightDirection: 1.5
-  normalizeSpeedFactor: 0.7
+  normalizeSpeedFactor: 0.8
   jumpHeight: 5
   horizontalProjectile: {fileID: 4839127419380771314, guid: 73cccc26a24bf437e9df71ecb1747553,
     type: 3}
