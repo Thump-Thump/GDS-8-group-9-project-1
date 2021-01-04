@@ -79,29 +79,32 @@ public class PlayerController : MonoBehaviour
             SlowDown();
         } else if (ShouldPlayerMaintainSpeed())
         {
-            
+            Debug.Log("MANTAIN");
+
         }
         else
         {
             NormalizeSpeed();
+            Debug.Log("NORMALIZE");
         }
 
     }
 
     private void Accelerate()
     {
-        //transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
         Debug.Log("Velocity: " + playerRigidBody.velocity.magnitude);
         
-        playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
+        
+        //playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
 
         GameManager.Instance.SetFastPlayerSpeed(); 
     }
 
     private void SlowDown()
     {
-        //transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
-        playerRigidBody.AddForce(Vector3.left * playerAccelerationSpeed);
+        transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        //playerRigidBody.AddForce(Vector3.left * playerAccelerationSpeed);
         GameManager.Instance.SetSlowPlayerSpeed();  
     }
 
@@ -169,12 +172,12 @@ public class PlayerController : MonoBehaviour
 
     private void NormalizeSpeed()
     {
-        if (transform.position.x < _playerInitialPosition)
+        if (transform.position.x < _playerInitialPosition - 0.5)
         {
             Accelerate();
 
         } 
-        else if (transform.position.x > _playerInitialPosition)
+        else if (transform.position.x > _playerInitialPosition + 0.5)
         {
             SlowDown();
         }
@@ -192,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldPlayerMaintainSpeed()
     {
-        return (_isJumping || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
+        return (_isJumping || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow));
     }
 
     private bool ShouldPlayerJump()
