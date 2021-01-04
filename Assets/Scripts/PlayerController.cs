@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     public float jumpHeight;
     private bool _jumpReady = true;
+    private bool _isJumping = false;
     [Space(10)]
 
     [Header("Shooting")]
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
         HandleJump();
     }
     
-    private void LoadComponents() 
+    private void LoadComponents()  
     {
         playerRigidBody = GetComponent<Rigidbody2D>();
     }
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
             playerRigidBody.freezeRotation = true;
             playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode2D.Impulse);
             _jumpReady = false;
+            _isJumping = true;
         }
     }
 
@@ -75,6 +77,9 @@ public class PlayerController : MonoBehaviour
         }  else if (ShouldPlayerSlowDown())
         {
             SlowDown();
+        } else if (_isJumping)
+        {
+            
         }
         else
         {
@@ -157,7 +162,7 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldPlayerAccelerate()
     {
-        return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
+        return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection && !_isJumping);
     }
 
     private void NormalizeSpeed()
@@ -180,7 +185,7 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldPlayerSlowDown()
     {
-        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
+        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection && !_isJumping);
     }
 
     private bool ShouldPlayerJump()
@@ -202,6 +207,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform")) 
         {
             _jumpReady = true;
+            _isJumping = false;
             playerRigidBody.freezeRotation = false;
             Debug.Log("jump ready");
 
