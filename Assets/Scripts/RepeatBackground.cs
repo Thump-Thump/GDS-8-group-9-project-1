@@ -16,6 +16,7 @@ public class RepeatBackground : MonoBehaviour
         MoveBackground();
         HandleRepeatingBackground();
     }
+    
 
     private void LoadComponents()
     {
