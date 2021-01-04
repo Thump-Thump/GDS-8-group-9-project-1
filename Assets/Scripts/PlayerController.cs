@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         }  else if (ShouldPlayerSlowDown())
         {
             SlowDown();
-        } else if (_isJumping)
+        } else if (ShouldPlayerMaintainSpeed())
         {
             
         }
@@ -91,6 +91,8 @@ public class PlayerController : MonoBehaviour
     private void Accelerate()
     {
         //transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        Debug.Log("Velocity: " + playerRigidBody.velocity.magnitude);
+        
         playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
 
         GameManager.Instance.SetFastPlayerSpeed(); 
@@ -186,6 +188,11 @@ public class PlayerController : MonoBehaviour
     private bool ShouldPlayerSlowDown()
     {
         return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection && !_isJumping);
+    }
+
+    private bool ShouldPlayerMaintainSpeed()
+    {
+        return (_isJumping || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
     }
 
     private bool ShouldPlayerJump()
