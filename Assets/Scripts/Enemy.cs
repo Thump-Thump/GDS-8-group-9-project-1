@@ -43,6 +43,7 @@ public class Enemy : MonoBehaviour
  
     void Update()
     {
+        Debug.Log("YOLO");
         HandleSpawningBomb();
         if (_customMovingEnabled)
         {
@@ -120,5 +121,12 @@ public class Enemy : MonoBehaviour
     private void EnableCustomMoving()
     {
         _customMovingEnabled = true;
+    }
+    
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("enemy");
+
+
     }
 }

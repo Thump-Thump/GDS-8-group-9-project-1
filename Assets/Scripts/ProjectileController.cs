@@ -44,4 +44,11 @@ public class ProjectileController : MonoBehaviour
         gameObject.transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
 
     }
+    
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Projectile");
+
+
+    }
 }
