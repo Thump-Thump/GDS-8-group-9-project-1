@@ -48,6 +48,10 @@ public class Enemy : MonoBehaviour
         {
             HandleMovingEnemy();
         }
+        else
+        {
+           StandbyMoving();
+        }
     }
 
     private void HandleSpawningBomb()
@@ -106,6 +110,11 @@ public class Enemy : MonoBehaviour
             _targetPosition = GenerateNewPosition();
             _isTargetPositionReached = false;
         }
+    }
+
+    private void StandbyMoving()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(_rightBound, transform.position.y, transform.position.z), enemySpeed * Time.deltaTime);
     }
 
     private void EnableCustomMoving()
