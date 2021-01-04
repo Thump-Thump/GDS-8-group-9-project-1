@@ -140,7 +140,6 @@ public class PlayerController : MonoBehaviour
     private void Accelerate()
     {
         transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
-        Debug.Log("Velocity: " + playerRigidBody.velocity.magnitude);
         
         
         //playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
@@ -284,12 +283,10 @@ public class PlayerController : MonoBehaviour
         _isJumping = false;
         playerRigidBody.freezeRotation = false;
         
-        Debug.Log("jump ready");
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
 
         if (collision.gameObject.CompareTag("Platform"))
         {
