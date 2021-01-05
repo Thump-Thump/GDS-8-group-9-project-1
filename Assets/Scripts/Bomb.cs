@@ -26,4 +26,15 @@ public class Bomb : MonoBehaviour
     {
         bombSpeed = bombDelaySpeed;
     }
+    
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(gameObject);
+            Destroy(collision.gameObject);
+        }
+
+    }
 }

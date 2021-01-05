@@ -45,10 +45,9 @@ public class ProjectileController : MonoBehaviour
 
     }
     
-    void OnCollisionEnter2D(Collision2D collision)
+    
+    void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("Projectile");
-
-
+        //Debug.Log(col.gameObject.name + " : " + gameObject.name + " : " + Time.time);
     }
 }

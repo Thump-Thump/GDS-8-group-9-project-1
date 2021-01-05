@@ -43,7 +43,6 @@ public class Enemy : MonoBehaviour
  
     void Update()
     {
-        Debug.Log("YOLO");
         HandleSpawningBomb();
         if (_customMovingEnabled)
         {
@@ -123,10 +122,15 @@ public class Enemy : MonoBehaviour
         _customMovingEnabled = true;
     }
     
-    void OnCollisionEnter2D(Collision2D collision)
+    
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("enemy");
 
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(gameObject);
+            Destroy(collision.gameObject);
+        }
 
     }
 }
