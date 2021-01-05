@@ -81,10 +81,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleAnimatingJump()
     {
-        if (_jumpKind == JumpKind.Backward && ShouldPlayerSlowDown())
+        if (_jumpKind == JumpKind.Backward && ShouldPlayerSlowDown(true))
         {
             SlowDown();
-        } else if (_jumpKind == JumpKind.Forward && ShouldPlayerAccelerate())
+        } else if (_jumpKind == JumpKind.Forward && ShouldPlayerAccelerate(true))
         {
             Accelerate();
         } 
@@ -105,11 +105,11 @@ public class PlayerController : MonoBehaviour
             } else if (IsNormalJump())
             {
                 _jumpKind = JumpKind.Normal;
-                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 1) , ForceMode2D.Impulse); 
+                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 0.95f) , ForceMode2D.Impulse); 
             } else if (IsBigJump())
             {
                 _jumpKind = JumpKind.Forward;
-                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 1.2f) , ForceMode2D.Impulse);             
+                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 1.1f) , ForceMode2D.Impulse);             
             }
 
         }
@@ -128,14 +128,11 @@ public class PlayerController : MonoBehaviour
 
         } else if (ShouldPlayerMaintainSpeed())
         {
-            Debug.Log("MANTAIN");
 
         }
         else
         {
             NormalizeSpeed();
-
-            Debug.Log("NORMALIZE");
         }
 
     }
@@ -143,7 +140,6 @@ public class PlayerController : MonoBehaviour
     private void Accelerate()
     {
         transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
-        Debug.Log("Velocity: " + playerRigidBody.velocity.magnitude);
         
         
         //playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
@@ -215,20 +211,20 @@ public class PlayerController : MonoBehaviour
         Instantiate(horizontalProjectile, transform.position, horizontalProjectile.transform.rotation);
     }
 
-    private bool ShouldPlayerAccelerate(bool ignoreJump = false)
+    private bool ShouldPlayerAccelerate(bool ignoreKey = false)
     {
-        return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
+        return ((Input.GetKey(KeyCode.RightArrow) || ignoreKey) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
     }
 
     private void NormalizeSpeed()
     {
-        if (transform.position.x < _playerInitialPosition - 0.5)
+        if (transform.position.x < _playerInitialPosition - 0.4)
         {
             Accelerate();
             _jumpKind = JumpKind.Normal;
 
         } 
-        else if (transform.position.x > _playerInitialPosition + 0.5)
+        else if (transform.position.x > _playerInitialPosition + 0.4)
         {
             SlowDown();
             _jumpKind = JumpKind.Backward;
@@ -241,9 +237,9 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private bool ShouldPlayerSlowDown(bool ignoreJump = false)
+    private bool ShouldPlayerSlowDown(bool ignoreKey = false)
     {
-        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
+        return ((Input.GetKey(KeyCode.LeftArrow) || ignoreKey) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
     }
 
     private bool ShouldPlayerMaintainSpeed()
@@ -287,13 +283,10 @@ public class PlayerController : MonoBehaviour
         _isJumping = false;
         playerRigidBody.freezeRotation = false;
         
-        Debug.Log("jump ready");
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
-
         if (collision.gameObject.CompareTag("Platform"))
         {
             HandleReturningOnGround();

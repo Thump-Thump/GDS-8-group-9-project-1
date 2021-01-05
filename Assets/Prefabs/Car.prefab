@@ -421,11 +421,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efdbb40f727bd44b08ff13e48d808c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAccelerationSpeed: 2
-  playerSlowDownSpeed: 1
-  maxPlayerDistanceLeftDirection: 2
-  maxPlayerDistanceRightDirection: 2
-  normalizeSpeedFactor: 0.7
+  playerAccelerationSpeed: 1.2
+  playerSlowDownSpeed: 0.75
+  maxPlayerDistanceLeftDirection: 1
+  maxPlayerDistanceRightDirection: 1.5
+  normalizeSpeedFactor: 0.8
   jumpHeight: 5
   horizontalProjectile: {fileID: 4839127419380771314, guid: 73cccc26a24bf437e9df71ecb1747553,
     type: 3}
@@ -443,7 +443,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 8154112011444068583}
   m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -467,7 +467,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.5456171, y: 0.40011775}
+  m_Offset: {x: -0.24394035, y: 0.10992253}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -478,5 +478,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.1178074, y: 1.8002355}
+  m_Size: {x: 2.828537, y: 1.0439694}
   m_EdgeRadius: 0
