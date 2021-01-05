@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Platform
+  - EnemyArea
+  - Enemy
+  - Projectile
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
@@ -14,7 +18,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Important
   - 
   - 
   - 
@@ -39,6 +43,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Important
+    uniqueID: 621901493
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

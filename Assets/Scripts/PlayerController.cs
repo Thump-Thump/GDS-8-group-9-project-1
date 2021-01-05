@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     public float jumpHeight;
     private bool _jumpReady = true;
+    private bool _isJumping = false;
+    private JumpKind _jumpKind = JumpKind.Normal;
     [Space(10)]
 
     [Header("Shooting")]
@@ -31,8 +33,14 @@ public class PlayerController : MonoBehaviour
 
 
 
-    private Rigidbody playerRigidBody;
+    private Rigidbody2D playerRigidBody;
     
+    private enum JumpKind
+    {
+        Backward,
+        Normal,
+        Forward
+    }
     
     void Start()
     {
@@ -43,13 +51,22 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         HanldeShooting();
-        HandleMovement();
         HandleJump();
+
+        if (!AnimateJump())
+        {
+            HandleMovement();
+        }
+        else
+        {
+            HandleAnimatingJump();
+        }
+
     }
     
-    private void LoadComponents() 
+    private void LoadComponents()  
     {
-        playerRigidBody = GetComponent<Rigidbody>();
+        playerRigidBody = GetComponent<Rigidbody2D>();
     }
 
     private void SetInitialVariables()
@@ -57,32 +74,84 @@ public class PlayerController : MonoBehaviour
         _playerInitialPosition = transform.position.x;
     }
 
+    private bool AnimateJump()
+    {
+        return _isJumping;
+    }
+
+    private void HandleAnimatingJump()
+    {
+        if (_jumpKind == JumpKind.Backward && ShouldPlayerSlowDown(true))
+        {
+            SlowDown();
+        } else if (_jumpKind == JumpKind.Forward && ShouldPlayerAccelerate(true))
+        {
+            Accelerate();
+        } 
+    }
+
     private void HandleJump()
     {
         if (ShouldPlayerJump())
         {
-            playerRigidBody.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+            playerRigidBody.freezeRotation = true;
             _jumpReady = false;
+            _isJumping = true;
+            
+            if (IsBackJump())
+            {
+                _jumpKind = JumpKind.Backward;
+                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 0.75f) , ForceMode2D.Impulse);
+            } else if (IsNormalJump())
+            {
+                _jumpKind = JumpKind.Normal;
+                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 0.95f) , ForceMode2D.Impulse); 
+            } else if (IsBigJump())
+            {
+                _jumpKind = JumpKind.Forward;
+                playerRigidBody.AddForce(Vector3.up * (jumpHeight * 1.1f) , ForceMode2D.Impulse);             
+            }
+
         }
     }
 
     private void HandleMovement()
     {
-        Debug.Log(transform.position);
-        if (ShouldPlayerAccelerate()) 
-        { 
-            Debug.Log("Accelerate");
-            transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
-        }  else if (ShouldPlayerSlowDown()) 
+        if (ShouldPlayerAccelerate())
         {
-            Debug.Log("SlowDown");
-            transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+            Accelerate();
+            _jumpKind = JumpKind.Forward;
+        }  else if (ShouldPlayerSlowDown())
+        {
+            SlowDown();
+            _jumpKind = JumpKind.Backward;
+
+        } else if (ShouldPlayerMaintainSpeed())
+        {
+
         }
         else
         {
             NormalizeSpeed();
         }
 
+    }
+
+    private void Accelerate()
+    {
+        transform.Translate(Vector3.right * playerAccelerationSpeed * Time.deltaTime);
+        
+        
+        //playerRigidBody.AddForce(Vector3.right * playerAccelerationSpeed);
+
+        GameManager.Instance.SetFastPlayerSpeed(); 
+    }
+
+    private void SlowDown()
+    {
+        transform.Translate(Vector3.left * playerSlowDownSpeed * Time.deltaTime);
+        //playerRigidBody.AddForce(Vector3.left * playerAccelerationSpeed);
+        GameManager.Instance.SetSlowPlayerSpeed();  
     }
 
 
@@ -142,33 +211,63 @@ public class PlayerController : MonoBehaviour
         Instantiate(horizontalProjectile, transform.position, horizontalProjectile.transform.rotation);
     }
 
-    private bool ShouldPlayerAccelerate()
+    private bool ShouldPlayerAccelerate(bool ignoreKey = false)
     {
-        return (Input.GetKey(KeyCode.RightArrow) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
+        return ((Input.GetKey(KeyCode.RightArrow) || ignoreKey) && transform.position.x < _playerInitialPosition + maxPlayerDistanceRightDirection);
     }
 
     private void NormalizeSpeed()
     {
-        if (transform.position.x < _playerInitialPosition)
+        if (transform.position.x < _playerInitialPosition - 0.4)
         {
-            transform.Translate(Vector3.right * (playerAccelerationSpeed * normalizeSpeedFactor) * Time.deltaTime);
+            Accelerate();
+            _jumpKind = JumpKind.Normal;
 
-        } else if (transform.position.x > _playerInitialPosition)
+        } 
+        else if (transform.position.x > _playerInitialPosition + 0.4)
         {
-            transform.Translate(Vector3.left * (playerSlowDownSpeed * normalizeSpeedFactor) * Time.deltaTime);
-
+            SlowDown();
+            _jumpKind = JumpKind.Backward;
+        }
+        else
+        {
+            GameManager.Instance.SetNormalPlayerSpeed();
+            _jumpKind = JumpKind.Normal;
         }
     }
 
 
-    private bool ShouldPlayerSlowDown()
+    private bool ShouldPlayerSlowDown(bool ignoreKey = false)
     {
-        return (Input.GetKey(KeyCode.LeftArrow) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
+        return ((Input.GetKey(KeyCode.LeftArrow) || ignoreKey) && transform.position.x > _playerInitialPosition - maxPlayerDistanceLeftDirection);
+    }
+
+    private bool ShouldPlayerMaintainSpeed()
+    {
+        return (_isJumping || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow));
     }
 
     private bool ShouldPlayerJump()
     {
         return (Input.GetKeyDown(KeyCode.UpArrow) && _jumpReady);
+    }
+
+    private bool IsBackJump()
+    {
+        //return Input.GetKey(KeyCode.LeftArrow);
+        return _jumpKind == JumpKind.Backward;
+    }
+
+    private bool IsNormalJump()
+    {
+        //return !Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow);
+        return _jumpKind == JumpKind.Normal;
+    }
+
+    private bool IsBigJump()
+    {
+        //return Input.GetKey(KeyCode.RightArrow);
+        return _jumpKind == JumpKind.Forward;
     }
 
     private bool ShouldPlayerShootHorizontally(){
@@ -178,11 +277,19 @@ public class PlayerController : MonoBehaviour
         return (Input.GetKeyDown(KeyCode.Space) && _verticalShootReady);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void HandleReturningOnGround()
     {
-        if (collision.gameObject.CompareTag("Platform")) 
+        _jumpReady = true;
+        _isJumping = false;
+        playerRigidBody.freezeRotation = false;
+        
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
         {
-            _jumpReady = true;
+            HandleReturningOnGround();
         }
 
     }

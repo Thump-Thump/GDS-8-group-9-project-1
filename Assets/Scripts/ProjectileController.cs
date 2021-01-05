@@ -21,7 +21,7 @@ public class ProjectileController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveHorizontally();
+        HandleProjectileTrajectory();
     }
 
     private void HandleProjectileTrajectory()
@@ -36,12 +36,18 @@ public class ProjectileController : MonoBehaviour
     }
 
     private void MoveHorizontally() {
-        gameObject.transform.Translate(Vector3.up * projectileSpeed * Time.deltaTime);
+        gameObject.transform.Translate(Vector3.right * projectileSpeed * Time.deltaTime);
     }
 
     private void MoveVertically()
     {
-        gameObject.transform.Translate(Vector3.forward * projectileSpeed * Time.deltaTime);
+        gameObject.transform.Translate(Vector3.up * projectileSpeed * Time.deltaTime);
 
+    }
+    
+    
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        //Debug.Log(col.gameObject.name + " : " + gameObject.name + " : " + Time.time);
     }
 }

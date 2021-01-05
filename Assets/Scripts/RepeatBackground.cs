@@ -3,17 +3,20 @@
 public class RepeatBackground : MonoBehaviour
 {
     public float backgroundSpeed;
+    private float _startingHorizontalPosition;
     
     private BoxCollider _boxCollider;
     void Start()
     {
         LoadComponents();
+        _startingHorizontalPosition = transform.position.x;
     }
     void Update()
     {
         MoveBackground();
         HandleRepeatingBackground();
     }
+    
 
     private void LoadComponents()
     {
@@ -29,7 +32,7 @@ public class RepeatBackground : MonoBehaviour
     {
         if (transform.position.x < (_boxCollider.size.x / 2) * -1)
         {
-            transform.position = new Vector3(-4.38f, 0, 0);
+            transform.position = new Vector3(_startingHorizontalPosition, transform.position.y, transform.position.z);
         }
     }
 }
