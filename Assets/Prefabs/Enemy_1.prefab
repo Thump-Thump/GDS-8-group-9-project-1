@@ -50,7 +50,7 @@ MonoBehaviour:
   bomb: {fileID: 3089171882319742166, guid: 8114e9c5192a9473eaca83078c29451e, type: 3}
   minWaitBeforeBombDrop: 2
   maxWaitBeforeBombDrop: 8
-  waitBeforeEscape: 12
+  waitBeforeEscape: 16
   enemySpeed: 1
   enemyEscapingSpeed: 3
 --- !u!212 &-1903663329308029114

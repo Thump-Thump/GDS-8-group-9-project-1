@@ -1953,6 +1953,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4400181753530937205, guid: 7128d3a66e7d546a99e7eb2e39cddb4c,
     type: 3}
+  minWaitBeforeSpawn: 7
+  maxWaitBeforeSpwan: 13
 --- !u!1 &2080138606
 GameObject:
   m_ObjectHideFlags: 0
