@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     private EscapeDirection _escapeDirection;
     
     public float enemySpeed;
+    public float enemyEscapingSpeed;
  
     private bool _isBombSpawning;
 
@@ -124,14 +125,14 @@ public class Enemy : MonoBehaviour
     {
         if (_escapeDirection == EscapeDirection.Left)
         {
-            transform.Translate(Vector3.left * enemySpeed * Time.deltaTime);
+            transform.Translate(Vector3.left * enemyEscapingSpeed * Time.deltaTime);
         } else if (_escapeDirection == EscapeDirection.Right)
         {
-            transform.Translate(Vector3.right * enemySpeed * Time.deltaTime);
+            transform.Translate(Vector3.right * enemyEscapingSpeed * Time.deltaTime);
 
         } else if (_escapeDirection == EscapeDirection.Up)
         {
-            transform.Translate(Vector3.up * enemySpeed * Time.deltaTime);
+            transform.Translate(Vector3.up * enemyEscapingSpeed * Time.deltaTime);
         }
     }
 
